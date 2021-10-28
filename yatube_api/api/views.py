@@ -26,7 +26,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return (IsAuthorOrReadOnlyPermission(),
                     "Изменение чужого контента запрещено!")
         super(PostViewSet, self).perform_destroy(serializer)
-        
+
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
