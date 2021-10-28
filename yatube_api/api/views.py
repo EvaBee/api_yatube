@@ -15,18 +15,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def perform_update(self, serializer):
-        if serializer.instance.author != self.request.user:
-            return (IsAuthorOrReadOnlyPermission(),
-                    "Изменение чужого контента запрещено!")
-        super(PostViewSet, self).perform_update(serializer)
-
-    def perform_destroy(self, serializer):
-        if serializer.author != self.request.user:
-            return (IsAuthorOrReadOnlyPermission(),
-                    "Изменение чужого контента запрещено!")
-        super(PostViewSet, self).perform_destroy(serializer)
-
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
@@ -45,15 +33,3 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         post = get_object_or_404(Post, pk=self.kwargs.get("post_id"))
         serializer.save(author=self.request.user, post=post)
-
-    def perform_update(self, serializer):
-        if serializer.instance.author != self.request.user:
-            return (IsAuthorOrReadOnlyPermission(),
-                    "Изменение чужого контента запрещено!")
-        super(CommentViewSet, self).perform_update(serializer)
-
-    def perform_destroy(self, serializer):
-        if serializer.author != self.request.user:
-            return (IsAuthorOrReadOnlyPermission(),
-                    "Изменение чужого контента запрещено!")
-        super(CommentViewSet, self).perform_destroy(serializer)
